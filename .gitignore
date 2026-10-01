@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+
+attendance.db
+
+known_faces/
+
+.venv/
+venv/
+env/
+
+*.log
+.env

@@ -1,0 +1,6 @@
+# Raspberry Pi 3B+ target: use a 64-bit Raspberry Pi OS userspace (aarch64).
+# Do not copy the Windows virtual environment.
+opencv-python>=4.8,<6
+numpy
+scikit-learn
+Flask>=3,<4
