@@ -1,4 +1,4 @@
-# Face Recognition Attendance System — Raspberry Pi 3B+
+# Face Recognition Attendance System using Raspberry Pi 3B+
 
 ## Overview
 
@@ -46,7 +46,7 @@ The objective is to make the Raspberry Pi function as a self-contained attendanc
 The Raspberry Pi module requires the following hardware.
 
 | Component | Purpose |
-|---|---|
+| --- | --- |
 | Raspberry Pi 3B+ | Main processing unit |
 | Logitech HD 720p USB Webcam | Captures faces |
 | microSD Card | Raspberry Pi operating system and project files |
