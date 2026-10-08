@@ -26,9 +26,8 @@ app = Flask(__name__)
 ensure_db()
 
 
-# ---------------------------------------------------------------------------
 # Database helper
-# ---------------------------------------------------------------------------
+# Connect and get database object
 def get_db():
     import sqlite3
 
@@ -36,7 +35,7 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-
+# Time formatting
 def format_working_time(minutes):
     if minutes is None:
         return "-"
@@ -59,10 +58,8 @@ def calculate_session_minutes(attendance_date, check_in, check_out):
         return None
 
 
-# ---------------------------------------------------------------------------
 # Working days: Monday-Saturday; Sunday excluded. Future dates are excluded
 # from the current month.
-# ---------------------------------------------------------------------------
 def get_working_days(year, month):
     today = date.today()
     first_day = date(year, month, 1)
@@ -83,9 +80,7 @@ def get_working_days(year, month):
     return working_days
 
 
-# ---------------------------------------------------------------------------
 # Dashboard
-# ---------------------------------------------------------------------------
 @app.route("/")
 def dashboard():
     today = date.today().isoformat()
@@ -126,9 +121,7 @@ def dashboard():
     )
 
 
-# ---------------------------------------------------------------------------
 # Faculty Management
-# ---------------------------------------------------------------------------
 @app.route("/faculty")
 def faculty():
     conn = get_db()
@@ -216,9 +209,7 @@ def register_faculty():
     )
 
 
-# ---------------------------------------------------------------------------
 # Daily Attendance
-# ---------------------------------------------------------------------------
 @app.route("/attendance")
 def attendance():
     selected_date = request.args.get("date", date.today().isoformat())
@@ -264,9 +255,7 @@ def attendance():
     )
 
 
-# ---------------------------------------------------------------------------
 # Monthly report builder
-# ---------------------------------------------------------------------------
 def build_monthly_report(month, department="ALL"):
     try:
         selected_year, selected_month = map(int, month.split("-"))
@@ -379,9 +368,7 @@ def reports():
     return render_template("reports.html", **data)
 
 
-# ---------------------------------------------------------------------------
 # CSV export
-# ---------------------------------------------------------------------------
 @app.route("/export-csv")
 def export_csv():
     month = request.args.get("month", date.today().strftime("%Y-%m"))

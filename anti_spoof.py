@@ -6,7 +6,7 @@ import numpy as np
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "best_model.onnx")
 REAL_THRESHOLD = float(os.environ.get("ANTI_SPOOF_THRESHOLD", "0.45"))
-TEMPORAL_FRAMES = int(os.environ.get("ANTI_SPOOF_FRAMES", "5"))
+TEMPORAL_FRAMES = int(os.environ.get("ANTI_SPOOF_FRAMES", "2"))
 CROP_SCALE = 2.7
 INPUT_SIZE = 128
 

@@ -104,16 +104,9 @@ def main():
                                 if not passive_real:
                                     embeddings.clear()
                                     liveness_passed = False
-                                    liveness.reset()
                                 else:
-                                    if not liveness_passed:
-                                        liveness_state = liveness.update(face)
-                                        if liveness_state["passed"]:
-                                            liveness_passed = True
-                                            embeddings.clear()
-                                        elif liveness_state["failed"]:
-                                            embeddings.clear()
-                                            liveness_passed = False
+                                    # We rely entirely on the passive MiniFAS Anti-Spoof model.
+                                    liveness_passed = True
                                     if liveness_passed:
                                         embeddings.append(engine.embed(frame, face))
                                         if len(embeddings) >= EMB_FRAMES:
@@ -125,7 +118,7 @@ def main():
                                                 res = identify(bundle, mean)
                                                 result = build_result(res)
                                                 result_until = time.time() + RESULT_HOLD
-                                                print(f"[scan] {res.get('faculty_id')} conf={res.get('confidence', 0):.2f} cos={res.get('cosine', 0):.2f} anti={median_real:.2f} liveness=True accepted={res.get('accepted')}")
+                                                print(f"[scan] {res.get('faculty_id')} conf={res.get('confidence', 0):.2f} cos={res.get('cosine', 0):.2f} anti={median_real:.2f} accepted={res.get('accepted')}")
                                                 reset_security(liveness, embeddings, spoof_history)
                                                 liveness_passed = False
             for f in faces:
@@ -137,6 +130,7 @@ def main():
             put(frame, "BCREC Faculty Attendance", (10, 34), 0.75)
             put(frame, datetime.now().strftime("%d %b %Y  %H:%M:%S"), (W - 300, 34), 0.60)
             cv2.rectangle(frame, (0, H - 130), (W, H), NAVY, -1)
+            
             if result:
                 put(frame, result["title"], (12, H - 78), 0.95, result["color"], 2)
                 put(frame, result["line"], (12, H - 40), 0.75, result["color"], 2)
@@ -144,10 +138,11 @@ def main():
                 put(frame, "Look at the camera", (12, H - 72), 0.72, WHITE, 2)
                 put(frame, last_spoof_text, (12, H - 32), 0.60, AMBER, 2)
             elif not liveness_passed:
-                put(frame, liveness_state["prompt"], (12, H - 72), 0.70, AMBER, 2)
-                put(frame, f"{liveness_state['progress']}  {last_spoof_text}", (12, H - 32), 0.58, WHITE, 2)
+                # Replaced the active prompt with a fast static verifying prompt
+                put(frame, "Analyzing liveness...", (12, H - 72), 0.70, AMBER, 2)
+                put(frame, last_spoof_text, (12, H - 32), 0.58, WHITE, 2)
             else:
-                put(frame, "Liveness verified - hold still", (12, H - 72), 0.68, GREEN, 2)
+                put(frame, "Recognizing face...", (12, H - 72), 0.68, GREEN, 2)
                 put(frame, last_spoof_text, (12, H - 32), 0.58, WHITE, 2)
             cv2.imshow(win, frame)
             key = cv2.waitKey(1) & 0xFF
